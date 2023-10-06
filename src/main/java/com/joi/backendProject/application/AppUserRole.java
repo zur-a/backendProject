@@ -1,5 +1,6 @@
 package com.joi.backendProject.application;
 
-public class AppUserRole {
-    
+public enum AppUserRole {
+    USER,
+    ADMIN
 }

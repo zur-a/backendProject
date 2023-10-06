@@ -7,6 +7,13 @@ import java.util.Collection;
 
 public class AppUser implements UserDetails {
 
+    private Long id;
+    private String name;
+    private String username;
+    private String email;
+    private String password;
+    private AppUserRole appUserRole;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

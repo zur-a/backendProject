@@ -1,5 +1,4 @@
 package com.joi.backendProject.security.config;
 
-public class WebSecurityConfig {
-
+public class PasswordEncoder {
 }

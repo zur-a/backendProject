@@ -1,5 +1,6 @@
 package com.joi.backendProject.controller;
 
+import com.joi.backendProject.request.RegistrationRequest;
 import com.joi.backendProject.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

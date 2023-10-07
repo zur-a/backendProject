@@ -1,4 +1,4 @@
-﻿package com.joi.backendProject.security.config;
+package com.joi.backendProject.security.config;
 
 import com.joi.backendProject.service.AppUserService;
 import lombok.AllArgsConstructor;
@@ -11,17 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-
-
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -33,7 +23,7 @@ public class WebSecurityConfig {
     private AppUserService service;
     @Autowired
     private BCryptPasswordEncoder encoder;
-    
+
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
@@ -58,11 +48,6 @@ public class WebSecurityConfig {
                 )
                 .formLogin(withDefaults());
         return http.build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

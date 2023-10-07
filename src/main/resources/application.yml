@@ -1,13 +1,14 @@
 server:
+  port: 8090
   error:
     include-message: always
     include-binding-errors: always
 
 spring:
     datasource:
-      password:
+      password: 1234
       url: jdbc:postgresql://localhost:5432/registration
-      username:
+      username: zura
     jpa:
       hibernate:
         ddl-auto: create-drop

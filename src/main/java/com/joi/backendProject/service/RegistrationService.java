@@ -15,7 +15,6 @@ public class RegistrationService {
         boolean emailIsValid = validator.test(request.getEmail());
 
         // TODO: Create a better way to check a valid email
-
         if (!emailIsValid) {
             throw new IllegalStateException("Email is not valid");
         }

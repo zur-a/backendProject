@@ -1,6 +1,7 @@
 package com.joi.backendProject.service;
 
 import com.joi.backendProject.application.AppUser;
+import com.joi.backendProject.application.AppUserRole;
 import com.joi.backendProject.request.RegistrationRequest;
 import com.joi.backendProject.utils.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,13 @@ public class RegistrationService {
             // Register the email here
             return service.singUp(
                     new AppUser(
-                            
+                            request.getFirstName(),
+                            request.getLastName(),
+                            request.getEmail(),
+                            request.getPassword(),
+                            AppUserRole.USER
                     )
-            )
+            );
         } catch (InvalidEmailException e) {
             // Handle the email validation error
             // For example, log the error or return an error response

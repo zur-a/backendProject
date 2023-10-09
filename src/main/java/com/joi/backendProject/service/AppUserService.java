@@ -1,5 +1,6 @@
 package com.joi.backendProject.service;
 
+import com.joi.backendProject.application.AppUser;
 import com.joi.backendProject.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,4 +18,10 @@ public class AppUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
+
+    public String singUp(AppUser user) {
+        return "";
+    }
+
+
 }

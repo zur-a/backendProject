@@ -24,7 +24,12 @@ public class AppUserService implements UserDetailsService {
     }
 
     public String singUp(AppUser user) {
-        checkUserExists(user);
+        boolean userExists = repository.
+                findByEmail(user.getEmail())
+                .isPresent();
+        if (userExists) {
+            throw new IllegalStateException("Email already registered");
+        }
 
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -34,15 +39,6 @@ public class AppUserService implements UserDetailsService {
         //TODO: Send confirmation token
 
         return "User has been registered";
-    }
-
-    private void checkUserExists(AppUser user) {
-        boolean userExists = repository.
-                findByEmail(user.getEmail())
-                .isPresent();
-        if (userExists) {
-            throw new IllegalStateException("Email already registered");
-        }
     }
 
 

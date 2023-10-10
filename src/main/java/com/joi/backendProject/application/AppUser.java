@@ -42,9 +42,10 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
     @Column
-    private Boolean locked;
+    private Boolean locked = false;
+    //Account will only be enabled when the user confirms the email
     @Column
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     public AppUser(String firstName,
                    String lastName,

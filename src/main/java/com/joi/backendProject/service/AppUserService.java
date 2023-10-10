@@ -53,7 +53,7 @@ public class AppUserService implements UserDetailsService {
 
         //TODO: Send confirmation email
 
-        return token;
+        return "User registered succesfully " + token;
     }
 
 

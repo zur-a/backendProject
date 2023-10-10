@@ -42,12 +42,10 @@ public class ConfirmationToken {
     public ConfirmationToken(String token,
                              LocalDateTime createdTime,
                              LocalDateTime expireTime,
-                             LocalDateTime confirmedTime,
                              AppUser user) {
         this.token = token;
         this.createdTime = createdTime;
         this.expireTime = expireTime;
-        this.confirmedTime = confirmedTime;
         this.user = user;
     }
 }

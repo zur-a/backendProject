@@ -16,7 +16,6 @@ public class EmailService implements EmailSender {
 
     private final String CONFIRM_MESSAGE = "Confirm your email";
 
-    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired

@@ -58,6 +58,16 @@ public class AppUserService implements UserDetailsService {
 
 
     public void enableAppUser(String email) {
+        // 1. Locate the user by their email in the repository
+        AppUser user = repository.findByEmail(email).orElse(null);
 
+        // 2. Handle the case where the user is not found
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email));
+        }
+
+        // 3. Update the user's account status to indicate it is enabled
+        user.setEnabled(true);   // Assuming you have an 'enabled' field in your AppUser entity
+        repository.save(user);
     }
 }

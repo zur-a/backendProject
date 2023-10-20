@@ -26,16 +26,21 @@ public class EmailService implements EmailSender {
     @Override
     public void send(String recipient, String email) {
         try {
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
-            helper.setText(email, true);
-            helper.setTo(recipient);
-            helper.setSubject(CONFIRM_MESSAGE);
-            helper.setFrom("ozeroearosa@gmail.com");
+            MimeMessage message = createMimeMessage(recipient, email);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            LOGGER.error("Error, email not sent ", e);
-            throw new IllegalStateException("Failed to sent the email");
+            LOGGER.error("Error, email not sent", e);
+            throw new IllegalStateException("Failed to send the email");
         }
+    }
+
+    private MimeMessage createMimeMessage(String recipient, String email) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+        helper.setText(email, true);
+        helper.setTo(recipient);
+        helper.setSubject(CONFIRM_MESSAGE);
+        helper.setFrom("ozeroearosa@gmail.com");
+        return message;
     }
 }

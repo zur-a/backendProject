@@ -25,32 +25,15 @@ public class RegistrationService {
     @Autowired
     ConfirmationTokenService confirmationTokenService;
 
-
-
     public String register(RegistrationRequest request) {
-        try {
-            if (!validator.test(request.getEmail())) {
-                throw new InvalidEmailException("Email is not valid: " + request.getEmail());
-            }
-            // Register the email here
-            String token = appUserService.signUp(
-                    new AppUser(
-                            request.getFirstName(),
-                            request.getLastName(),
-                            request.getEmail(),
-                            request.getPassword(),
-                            AppUserRole.USER
-                    )
-            );
-            String link = "http://localhost:8090/api/v1/registration/confirm?token=" + token;
-            emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-            return token;
-        } catch (InvalidEmailException e) {
-            // Handle the email validation error
-            // For example, log the error or return an error response
-            // You can also rethrow the exception if necessary
-            return "Error: " + e.getMessage(); // Or another appropriate response
-        }
+        validateEmail(request.getEmail());
+
+        AppUser newUser = createAppUserFromRequest(request);
+        String token = appUserService.signUp(newUser);
+
+        sendConfirmationEmail(request.getEmail(), request.getFirstName(), token);
+
+        return token;
     }
 
     @Transactional
@@ -58,7 +41,7 @@ public class RegistrationService {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
-                    new IllegalStateException("Token not found"));
+                        new IllegalStateException("Token not found"));
 
         if (confirmationToken.getConfirmedTime() != null) {
             throw new IllegalStateException("Email already confirmed");
@@ -72,6 +55,27 @@ public class RegistrationService {
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(confirmationToken.getUser().getEmail());
         return "User has validated his account";
+    }
+
+    private void validateEmail(String email) {
+        if (!validator.test(email)) {
+            throw new InvalidEmailException("Email is not valid: " + email);
+        }
+    }
+
+    private AppUser createAppUserFromRequest(RegistrationRequest request) {
+        return new AppUser(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPassword(),
+                AppUserRole.USER
+        );
+    }
+
+    private void sendConfirmationEmail(String recipientEmail, String firstName, String token) {
+        String link = "http://localhost:8090/api/v1/registration/confirm?token=" + token;
+        emailSender.send(recipientEmail, buildEmail(firstName, link));
     }
 
     private String buildEmail(String name, String link) {

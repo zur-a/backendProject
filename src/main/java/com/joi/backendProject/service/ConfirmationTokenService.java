@@ -1,5 +1,6 @@
 package com.joi.backendProject.service;
 
+import com.joi.backendProject.exceptions.EmailNotFoundException;
 import com.joi.backendProject.repository.ConfirmationTokenRepository;
 import com.joi.backendProject.utils.ConfirmationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ConfirmationTokenService {
             confirmationToken.setConfirmedTime(LocalDateTime.now());          // Set the confirmedTime to the current time
             repository.save(confirmationToken);                              // Save the updated entity
         } else {
-            throw new IllegalStateException("Token not found");
+            throw new EmailNotFoundException("Email not found");
         }
     }
 }

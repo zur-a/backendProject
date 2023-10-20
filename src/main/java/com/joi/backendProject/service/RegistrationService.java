@@ -29,21 +29,21 @@ public class RegistrationService {
 
     public String register(RegistrationRequest request) {
         try {
-            if (!validator.test(request.email())) {
-                throw new InvalidEmailException("Email is not valid: " + request.email());
+            if (!validator.test(request.getEmail())) {
+                throw new InvalidEmailException("Email is not valid: " + request.getEmail());
             }
             // Register the email here
             String token = appUserService.signUp(
                     new AppUser(
-                            request.firstName(),
-                            request.lastName(),
-                            request.email(),
-                            request.password(),
+                            request.getFirstName(),
+                            request.getLastName(),
+                            request.getEmail(),
+                            request.getPassword(),
                             AppUserRole.USER
                     )
             );
             String link = "http://localhost:8090/api/v1/registration/confirm?token=" + token;
-            emailSender.send(request.email(), buildEmail(request.firstName(), link));
+            emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
             return token;
         } catch (InvalidEmailException e) {
             // Handle the email validation error

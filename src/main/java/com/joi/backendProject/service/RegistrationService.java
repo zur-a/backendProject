@@ -33,7 +33,7 @@ public class RegistrationService {
                 throw new InvalidEmailException("Email is not valid: " + request.getEmail());
             }
             // Register the email here
-            String token = appUserService.singUp(
+            String token = appUserService.signUp(
                     new AppUser(
                             request.getFirstName(),
                             request.getLastName(),

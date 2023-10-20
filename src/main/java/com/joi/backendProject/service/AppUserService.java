@@ -29,31 +29,39 @@ public class AppUserService implements UserDetailsService {
         return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
-    public String singUp(AppUser user) {
-        boolean userExists = repository.
-                findByEmail(user.getEmail())
-                .isPresent();
-        if (userExists) {
+    public String signUp(AppUser user) {
+        if (emailAlreadyExists(user.getEmail())) {
             throw new IllegalStateException("Email already registered");
         }
 
-        String encodedPassword = encoder.encode(user.getPassword());
+        String encodedPassword = encodePassword(user.getPassword());
         user.setPassword(encodedPassword);
 
         repository.save(user);
 
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(EXPIRING_TIME),
-                user
-        );
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        //TODO: Send confirmation email
-
+        String token = generateConfirmationToken(user);
         return token;
+    }
+
+    private boolean emailAlreadyExists(String email) {
+        return repository.findByEmail(email).isPresent();
+    }
+
+    private String encodePassword(String password) {
+        return encoder.encode(password);
+    }
+
+    private String generateConfirmationToken(AppUser user) {
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = createConfirmationToken(token, user);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        return token;
+    }
+
+    private ConfirmationToken createConfirmationToken(String token, AppUser user) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = now.plusMinutes(EXPIRING_TIME);
+        return new ConfirmationToken(token, now, expirationTime, user);
     }
 
 
@@ -70,4 +78,6 @@ public class AppUserService implements UserDetailsService {
         user.setEnabled(true);   // Assuming you have an 'enabled' field in your AppUser entity
         repository.save(user);
     }
+
+
 }

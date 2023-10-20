@@ -38,23 +38,33 @@ public class RegistrationService {
 
     @Transactional
     public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
-                .orElseThrow(() ->
-                        new IllegalStateException("Token not found"));
+        ConfirmationToken confirmationToken = getTokenOrThrowException(token);
 
-        if (confirmationToken.getConfirmedTime() != null) {
+        if (isEmailAlreadyConfirmed(confirmationToken)) {
             throw new IllegalStateException("Email already confirmed");
         }
 
-        LocalDateTime expireTime = confirmationToken.getExpireTime();
-
-        if (expireTime.isBefore(LocalDateTime.now())) {
+        if (isTokenExpired(confirmationToken.getExpireTime())) {
             throw new IllegalStateException("Token expired");
         }
+
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(confirmationToken.getUser().getEmail());
-        return "User has validated his account";
+
+        return "User has validated their account";
+    }
+
+    private ConfirmationToken getTokenOrThrowException(String token) {
+        return confirmationTokenService.getToken(token)
+                .orElseThrow(() -> new IllegalStateException("Token not found"));
+    }
+
+    private boolean isEmailAlreadyConfirmed(ConfirmationToken confirmationToken) {
+        return confirmationToken.getConfirmedTime() != null;
+    }
+
+    private boolean isTokenExpired(LocalDateTime expireTime) {
+        return expireTime.isBefore(LocalDateTime.now());
     }
 
     private void validateEmail(String email) {
